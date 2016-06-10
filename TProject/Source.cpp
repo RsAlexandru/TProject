@@ -7,6 +7,156 @@
 const char g_szClassName[] = "WindowsApp";
 HINSTANCE hInstance;
 
+FILE *f = fopen("dictionar.txt", "r");
+struct node
+{
+	char word[20];
+	char meaning[20];
+	struct node *left, *right;
+};
+
+node *tree_root;
+
+struct node* newNode(char *w, char *m)
+{
+	struct node* node = (struct node*)malloc(sizeof(struct node));
+
+	strcpy(node->word, w);
+	strcpy(node->meaning, m);
+
+	node->left = node->right = NULL;
+	return (node);
+}
+
+void separateword(char *str, char *w, char *m)
+{
+	int i, j, pos = -1;
+
+	for (i = 0; str[i] != ' '; i++)
+	{
+		pos++;
+		w[i] = str[i];
+	}
+
+	w[i++] = NULL;
+
+	int k = -1;
+
+	for (j = pos + 2; j<strlen(str) - 1; j++)
+	{
+		k++;
+		m[k] = str[j];
+	}
+	m[k + 1] = NULL;
+}
+
+void addword(node *tree, char *word, char *meaning)
+{
+
+	node *p, *q;
+	p = q = tree;
+
+	while (p != NULL)
+	{
+		q = p;
+		if (strcmp(word, p->word)<0)
+			p = p->left;
+		else
+			p = p->right;
+	}
+	if (strcmp(word, q->word)<0)
+		q->left = newNode(word, meaning);
+	else
+		q->right = newNode(word, meaning);
+
+
+}
+
+void addworden(node *tree, char *word, char *meaning)
+{
+	node *p, *q;
+	p = q = tree;
+
+	while (p != NULL)
+	{
+		q = p;
+		if (strcmp(meaning, p->meaning)<0)
+			p = p->left;
+		else
+			p = p->right;
+	}
+	if (strcmp(meaning, q->meaning)<0)
+		q->left = newNode(word, meaning);
+	else
+		q->right = newNode(word, meaning);
+
+}
+
+struct node* TreeFromFile(FILE *f)
+{
+	node *ptree = NULL;
+	char word[20], meaning[20], str[120], *i;
+	int count = 0;
+
+	if (f == NULL)
+		ptree = NULL;
+	else
+	{
+		while (!feof(f))
+		{
+
+			i = fgets(str, 120, f);
+
+			if (i == NULL)
+				break;
+
+			separateword(str, word, meaning);
+			if (count == 0)
+			{
+				ptree = newNode(word, meaning);
+				count = 1;
+			}
+			else
+				addword(ptree, word, meaning);
+		}
+		rewind(f);
+	}
+	return ptree;
+}
+
+struct node* TreeFromFileEn(FILE *f)
+{
+	node *ptree = NULL;
+	char word[20], meaning[20], str[120], *i;
+	int count = 0;
+
+	if (f == NULL)
+		ptree = NULL;
+	else
+	{
+		while (!feof(f))
+		{
+
+			i = fgets(str, 120, f);
+
+			if (i == NULL)
+				break;
+
+			separateword(str, word, meaning);
+			if (count == 0)
+			{
+				ptree = newNode(word, meaning);
+				count = 1;
+			}
+			else
+				addworden(ptree, word, meaning);
+		}
+		rewind(f);
+	}
+	return ptree;
+}
+
+
 BOOL CALLBACK DlgDespre(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam);
 BOOL CALLBACK DlgDictionarRo(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam);
 BOOL CALLBACK DlgDictionarEn(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam);
