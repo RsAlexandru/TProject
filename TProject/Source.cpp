@@ -17,6 +17,7 @@ struct node
 
 node *tree_root;
 
+
 struct node* newNode(char *w, char *m)
 {
 	struct node* node = (struct node*)malloc(sizeof(struct node));
@@ -25,9 +26,10 @@ struct node* newNode(char *w, char *m)
 	strcpy(node->meaning, m);
 
 	node->left = node->right = NULL;
-	return (node);
+	return node;
 }
 
+//pt fisierul text dictionar
 void separateword(char *str, char *w, char *m)
 {
 	int i, j, pos = -1;
@@ -474,9 +476,17 @@ BOOL CALLBACK DlgDictionarRo(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lPar
 								strcat(string, temp->meaning);
 								strcat(string, " ");
 							}
+							else
+							{
+								MessageBox(hwnd, v[i], "Cuvant necunoscut", MB_OK | MB_ICONEXCLAMATION);
+							}
 						}
 
 						SetDlgItemText(hwnd, IDC_TEXT2, string);
+					}
+					else
+					{
+						MessageBox(hwnd, "Introduceti text", "Lipsa text", MB_OK | MB_ICONEXCLAMATION);
 					}
 			    }
 				break;
@@ -553,9 +563,17 @@ BOOL CALLBACK DlgDictionarEn(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lPar
 								strcat(string, temp->word);
 								strcat(string, " ");
 							}
+							else
+							{
+								MessageBox(hwnd,v[i] , "Cuvant necunoscut", MB_OK | MB_ICONEXCLAMATION);
+							}
 						}
 
 						SetDlgItemText(hwnd, IDC_TEXT3, string);
+					}
+					else
+					{
+						MessageBox(hwnd, "Introduceti text", "Lipsa text", MB_OK | MB_ICONEXCLAMATION);
 					}
 				}
 			break;
